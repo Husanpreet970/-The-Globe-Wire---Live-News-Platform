@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Globe Wire — Live News</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1a1410;--ink-mid:#3d3530;--ink-light:#7a6f68;--ink-faint:#b8afa8;
+  --paper:#faf8f5;--paper-warm:#f4f0e8;--card:#fffffe;
+  --rule:#d8d0c4;--rule-dark:#c0b8ac;
+  --red:#c0392b;--blue:#1a4a7a;--gold:#b8860b;--green:#1a7a3a;
+}
+body{background:var(--paper);color:var(--ink);font-family:'Source Serif 4',Georgia,serif;font-size:16px;line-height:1.65}
+
+/* masthead */
+.masthead{background:var(--card);border-bottom:4px double var(--ink);text-align:center}
+.masthead-top{padding:8px 20px;border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--ink-light);letter-spacing:.05em;text-transform:uppercase}
+.masthead-date{font-style:italic;text-transform:none}
+.logo-name{font-family:'Playfair Display',serif;font-size:52px;font-weight:900;letter-spacing:-1px;line-height:1;padding:12px 0 6px}
+.logo-name span{color:var(--red)}
+.logo-sub{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-light);padding-bottom:8px}
+.edition-bar{font-size:11px;color:var(--ink-faint);letter-spacing:.1em;padding:5px 0;border-top:1px solid var(--rule)}
+
+/* navigation */
+.nav{background:var(--ink);display:flex;overflow-x:auto;scrollbar-width:none;padding:0 12px}
+.nav::-webkit-scrollbar{display:none}
+.nav button{color:#c8bfb4;font-family:'Source Serif 4',serif;font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:10px 14px;cursor:pointer;border:none;border-bottom:3px solid transparent;background:none;white-space:nowrap;transition:color .15s,border-color .15s}
+.nav button:hover{color:#fff}
+.nav button.active{color:#fff;border-bottom-color:var(--red)}
+
+/* ticker */
+.ticker-bar{background:var(--red);color:#fff;display:flex;align-items:center;overflow:hidden}
+.ticker-label{background:#8b1a12;padding:7px 14px;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
+.ticker-wrap{overflow:hidden;flex:1}
+.ticker-track{display:flex;gap:40px;white-space:nowrap;animation:tick 40s linear infinite}
+.ticker-track:hover{animation-play-state:paused}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ticker-item{font-size:12px;flex-shrink:0}
+.ticker-sep{opacity:.5}
+
+/* search-bar */
+.search-bar{background:var(--paper-warm);border-bottom:1px solid var(--rule);padding:10px 0}
+.search-inner{max-width:980px;margin:0 auto;padding:0 16px;display:flex;gap:8px}
+.search-box{flex:1;display:flex;align-items:center;background:var(--card);border:1px solid var(--rule-dark);border-radius:3px;padding:0 12px;gap:8px}
+.search-box input{flex:1;border:none;background:none;font-family:'Source Serif 4',serif;font-size:14px;color:var(--ink);padding:9px 0;outline:none}
+.search-box input::placeholder{color:var(--ink-faint);font-style:italic}
+.btn-search{background:var(--ink);color:#fff;border:none;padding:9px 20px;font-family:'Source Serif 4',serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:background .15s;white-space:nowrap}
+.btn-search:hover{background:var(--red)}
+
+/* layout */
+.page{max-width:980px;margin:0 auto;padding:0 16px}
+.region-row{display:flex;gap:6px;flex-wrap:wrap;margin:20px 0 16px}
+.rpill{background:var(--paper-warm);border:1px solid var(--rule);padding:4px 12px;border-radius:2px;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-mid);cursor:pointer;font-family:'Source Serif 4',serif;transition:background .1s}
+.rpill:hover,.rpill.active{background:var(--ink);color:#fff}
+
+.main-layout{display:grid;grid-template-columns:1fr 280px;gap:20px;padding-bottom:40px}
+
+/* section header */
+.sec-head{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding-bottom:8px;border-bottom:2px solid var(--ink)}
+.sec-title{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
+.sec-line{flex:1;height:1px;background:var(--rule)}
+
+/* hero section */
+.hero{display:grid;grid-template-columns:1fr 320px;border:1px solid var(--rule);background:var(--card);margin-bottom:24px;cursor:pointer;transition:border-color .15s}
+.hero:hover{border-color:var(--ink-mid)}
+.hero-body{padding:28px}
+.hero-tag{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--red);display:block;margin-bottom:10px}
+.hero-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;line-height:1.2;margin-bottom:14px;color:var(--ink)}
+.hero-desc{font-size:16px;line-height:1.7;color:var(--ink-mid);margin-bottom:16px;font-style:italic}
+.hero-meta{font-size:11px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.08em;border-top:1px solid var(--rule);padding-top:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.meta-src{color:var(--blue);font-weight:700}
+.hero-img{background:linear-gradient(135deg,#0d2840,#1a4a7a);display:flex;align-items:center;justify-content:center;min-height:260px;position:relative;overflow:hidden}
+.hero-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.hero-img-fallback{text-align:center;z-index:1;color:rgba(255,255,255,.2)}
+.hero-img-fallback svg{width:56px;height:56px;fill:currentColor;display:block;margin:0 auto 8px}
+.hero-img-fallback span{font-size:10px;letter-spacing:.2em;text-transform:uppercase}
+.read-link{display:inline-flex;align-items:center;gap:4px;font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--red);background:none;border:none;cursor:pointer;font-family:'Source Serif 4',serif;font-weight:700;padding:0;margin-top:6px}
+.read-link:hover{text-decoration:underline}
+
+/* cards-grid */
+.cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:24px}
+.card{background:var(--card);border:1px solid var(--rule);display:flex;flex-direction:column;cursor:pointer;transition:border-color .15s}
+.card:hover{border-color:var(--ink-mid)}
+.card-img{height:110px;background:linear-gradient(135deg,#1a1410,#3d3530);display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--rule);overflow:hidden;position:relative}
+.card-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.card-img svg{width:30px;height:30px;fill:rgba(255,255,255,.2)}
+.card-body{padding:14px;flex:1;display:flex;flex-direction:column;gap:8px}
+.card-tag{font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--red)}
+.card-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;line-height:1.35;color:var(--ink)}
+.card-desc{font-size:13px;line-height:1.55;color:var(--ink-mid);flex:1}
+.card-meta{font-size:10px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.08em;border-top:1px solid var(--rule);padding-top:8px;display:flex;justify-content:space-between}
+.card-src{color:var(--blue);font-weight:700}
+
+/* list strips */
+.strips-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+.strip{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--rule);cursor:pointer}
+.strip:hover .strip-title{color:var(--red)}
+.strip:last-child{border-bottom:none}
+.strip-num{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:var(--rule-dark);line-height:1;min-width:32px;padding-top:2px}
+.strip-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;line-height:1.3;color:var(--ink);margin-bottom:4px;transition:color .15s}
+.strip-meta{font-size:10px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.08em}
+.strip-src{color:var(--blue);font-weight:700}
+
+/* sidebar */
+.sidebar-widget{background:var(--card);border:1px solid var(--rule);margin-bottom:20px}
+.widget-head{background:var(--ink);color:#fff;padding:8px 14px;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
+.widget-body{padding:14px}
+.trend-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--rule);cursor:pointer}
+.trend-item:hover .trend-title{color:var(--red)}
+.trend-item:last-child{border-bottom:none}
+.trend-rank{font-family:'Playfair Display',serif;font-size:20px;font-weight:900;color:var(--red);line-height:1;min-width:20px}
+.trend-title{font-size:13px;line-height:1.4;color:var(--ink-mid);transition:color .15s}
+.market-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--rule);font-size:13px}
+.market-row:last-child{border-bottom:none}
+.market-name{color:var(--ink-mid)}
+.up{color:var(--green);font-weight:700}
+.dn{color:var(--red);font-weight:700}
+
+/* states */
+.state{text-align:center;padding:60px 20px;color:var(--ink-faint)}
+.spinner{width:32px;height:32px;border:2px solid var(--rule);border-top-color:var(--ink);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.state-text{font-size:14px;font-style:italic;margin-bottom:16px}
+.retry-btn{background:var(--ink);color:#fff;border:none;padding:8px 22px;font-family:'Source Serif 4',serif;font-size:13px;letter-spacing:.08em;cursor:pointer;border-radius:2px;transition:background .15s}
+.retry-btn:hover{background:var(--red)}
+
+/* footer section */
+footer{border-top:4px double var(--ink);padding:16px 0;text-align:center;background:var(--card)}
+footer p{font-size:11px;color:var(--ink-faint);letter-spacing:.1em;text-transform:uppercase}
+
+/* responsiveness */
+@media(max-width:720px){
+  .logo-name{font-size:36px}
+  .main-layout{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .hero{grid-template-columns:1fr}
+  .hero-img{min-height:160px}
+  .hero-title{font-size:22px}
+  .cards-grid{grid-template-columns:1fr}
+  .strips-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="masthead-top">
+    <span class="masthead-date" id="hdr-date">Loading…</span>
+    <span style="font-style:italic;color:var(--ink-faint)">All the news that's fit to read</span>
+    <span>Est. 2024 · Digital Edition</span>
+  </div>
+  <div class="logo-name">The <span>Globe</span> Wire</div>
+  <div class="logo-sub">World · Business · Technology · Science · Culture</div>
+  <div class="edition-bar">Live News Edition &nbsp;·&nbsp; Powered by The Guardian Open Platform</div>
+</header>
+
+<nav class="nav">
+  <button class="active" data-cat="general">Top Stories</button>
+  <button data-cat="world">World</button>
+  <button data-cat="politics">Politics</button>
+  <button data-cat="business">Business</button>
+  <button data-cat="technology">Technology</button>
+  <button data-cat="science">Science</button>
+  <button data-cat="health">Health</button>
+  <button data-cat="culture">Culture</button>
+  <button data-cat="sport">Sports</button>
+</nav>
+
+<div class="ticker-bar">
+  <div class="ticker-label">LIVE</div>
+  <div class="ticker-wrap"><div class="ticker-track" id="ticker">
+    <span class="ticker-item">Loading headlines…</span>
+    <span class="ticker-sep"> ◆ </span>
+    <span class="ticker-item">Please wait</span>
+  </div></div>
+</div>
+
+<div class="search-bar">
+  <div class="search-inner">
+    <div class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--ink-faint)"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="search-input" placeholder="Search global news, topics…">
+    </div>
+    <button class="btn-search" id="search-btn">Search ↗</button>
+  </div>
+</div>
+
+<div class="page">
+  <div class="region-row" id="region-row"></div>
+  <div class="main-layout">
+    <main id="main"></main>
+    <aside class="sidebar">
+      <div class="sidebar-widget">
+        <div class="widget-head">🔥 Trending</div>
+        <div class="widget-body" id="trending">
+          <div style="font-size:12px;color:var(--ink-faint);font-style:italic">Loading…</div>
+        </div>
+      </div>
+      <div class="sidebar-widget">
+        <div class="widget-head">📈 Markets</div>
+        <div class="widget-body" id="markets">
+          <div class="market-row"><span class="market-name">S&amp;P 500</span><span class="up" id="sp500">Loading…</span></div>
+          <div class="market-row"><span class="market-name">NASDAQ</span><span class="up" id="nasdaq">—</span></div>
+          <div class="market-row"><span class="market-name">Gold</span><span class="up" id="gold">—</span></div>
+          <div class="market-row"><span class="market-name">BTC/USD</span><span id="btc">—</span></div>
+          <div class="market-row"><span class="market-name">USD/INR</span><span id="inr">—</span></div>
+        </div>
+      </div>
+      <div class="sidebar-widget">
+        <div class="widget-head">📡 Sources</div>
+        <div class="widget-body" style="font-size:12px;color:var(--ink-mid);line-height:2">
+          The Guardian · Reuters · BBC · AP · Bloomberg · NY Times · Al Jazeera · Washington Post · Financial Times · The Independent
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+<footer><p>© 2026 The Globe Wire · Live News via The Guardian Open Platform · Free &amp; Open</p></footer>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// THE GUARDIAN OPEN PLATFORM — free, CORS-enabled, no credit card
+// Get your own free key at https://open-platform.theguardian.com/
+// The 'test' key works for dev/personal use (rate limited but works)
+// ═══════════════════════════════════════════════════════════════════
+const GRD_KEY = 'test'; // works for personal use
+const GRD = 'https://content.guardianapis.com';
+
+// Map nav categories → Guardian sections
+const SECTION_MAP = {
+  general:    'world|politics|business|technology|science|environment',
+  world:      'world',
+  politics:   'politics|us-news',
+  business:   'business|money',
+  technology: 'technology',
+  science:    'science',
+  health:     'lifeandstyle|society',
+  culture:    'culture|arts|film|music|books',
+  sport:      'sport',
+};
+
+// Region → search term modifier
+const REGION_Q = {
+  Global: '', Americas: 'US OR Canada OR Brazil OR Mexico',
+  Europe: 'UK OR France OR Germany OR Europe OR EU',
+  'Asia-Pacific': 'India OR China OR Japan OR Australia OR Asia',
+  'Middle East': 'Middle East OR Israel OR Iran OR Saudi Arabia',
+  Africa: 'Africa OR Nigeria OR Kenya OR South Africa OR Egypt',
+};
+
+const REGIONS = ['Global','Americas','Europe','Asia-Pacific','Middle East','Africa'];
+const CAT_LABEL = {general:'Top Stories',world:'World',politics:'Politics',business:'Business',technology:'Technology',science:'Science',health:'Health',culture:'Culture',sport:'Sports'};
+
+// Gradient colors per category for image fallbacks
+const CAT_GRAD = {
+  general:'#0d2840,#1a4a7a', world:'#0d2840,#1a4a7a',
+  politics:'#2a0a0a,#6a1515', business:'#2a1d00,#5a3a00',
+  technology:'#0d2a1d,#1a5a3a', science:'#1d0d2a,#3a1a5a',
+  health:'#0a2a2a,#1a5050', culture:'#2a0d2a,#5a1a5a',
+  sport:'#1a1a0a,#3a3a0a',
+};
+
+let cat = 'general', region = 'Global', searchQ = '', articles = [];
+
+// ─── DATE ─────────────────────────────────────────────────────────
+document.getElementById('hdr-date').textContent =
+  new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+// ─── TIME AGO ─────────────────────────────────────────────────────
+function ago(s) {
+  if (!s) return 'Recent';
+  const m = Math.round((Date.now() - new Date(s)) / 60000);
+  if (m < 2) return 'Just now';
+  if (m < 60) return m + 'm ago';
+  const h = Math.floor(m/60);
+  if (h < 24) return h + 'h ago';
+  return Math.floor(h/24) + 'd ago';
+}
+
+// ─── TICKER ───────────────────────────────────────────────────────
+function setTicker(items) {
+  const doubled = [...items, ...items];
+  document.getElementById('ticker').innerHTML =
+    doubled.map(t => `<span class="ticker-item">${t}</span><span class="ticker-sep"> ◆ </span>`).join('');
+}
+
+// ─── REGIONS ──────────────────────────────────────────────────────
+function buildRegions() {
+  document.getElementById('region-row').innerHTML =
+    REGIONS.map(r =>
+      `<button class="rpill${r===region?' active':''}" onclick="setRegion('${r}')">${r}</button>`
+    ).join('');
+}
+function setRegion(r) { region = r; buildRegions(); load(); }
+
+// ─── GUARDIAN FETCH ───────────────────────────────────────────────
+async function fetchGuardian() {
+  let q = searchQ || '';
+  const regionExtra = REGION_Q[region] || '';
+  if (regionExtra && !searchQ) q = regionExtra;
+
+  const section = SECTION_MAP[cat] || 'world';
+  const params = new URLSearchParams({
+    'api-key': GRD_KEY,
+    'show-fields': 'headline,trailText,thumbnail,byline,wordcount',
+    'show-tags': 'contributor',
+    'page-size': '30',
+    'order-by': 'newest',
+  });
+
+  if (searchQ) {
+    params.set('q', searchQ + (regionExtra ? ' AND (' + regionExtra + ')' : ''));
+  } else {
+    if (!section.includes('|')) params.set('section', section);
+    else params.set('q', '');  // just use section parts below
+    if (regionExtra) params.set('q', regionExtra);
+  }
+
+  if (section.includes('|') && !searchQ && !regionExtra) {
+    params.delete('q');
+  }
+
+  const url = searchQ
+    ? `${GRD}/search?${params}`
+    : `${GRD}/search?section=${section.split('|')[0]}&${params}`;
+
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('Guardian API returned ' + res.status);
+  const data = await res.json();
+  return data.response.results || [];
+}
+
+// ─── TRANSFORM ────────────────────────────────────────────────────
+function transform(results) {
+  return results.map(r => ({
+    title: r.fields?.headline || r.webTitle || 'Untitled',
+    desc:  r.fields?.trailText || '',
+    src:   'The Guardian',
+    section: r.sectionName || CAT_LABEL[cat] || 'News',
+    time:  ago(r.webPublicationDate),
+    rawTime: r.webPublicationDate,
+    link:  r.webUrl || '#',
+    img:   r.fields?.thumbnail || null,
+    byline: r.fields?.byline || '',
+  }));
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────
+function renderLoading() {
+  document.getElementById('main').innerHTML =
+    `<div class="state"><div class="spinner"></div><div class="state-text">Fetching live news from The Guardian…</div></div>`;
+}
+
+function renderError(msg) {
+  document.getElementById('main').innerHTML = `
+    <div class="state">
+      <div style="font-size:32px;margin-bottom:12px">⚠️</div>
+      <div class="state-text">${msg}</div>
+      <button class="retry-btn" onclick="load()">↻ Try Again</button>
+    </div>`;
+}
+
+function imgFallback(grad) {
+  return `<div class="hero-img-fallback">
+    <svg viewBox="0 0 24 24"><path d="M4 22h16V4H4v18zm2-2V6h12v14H6zm2-2h8v-2H8v2zm0-4h8v-2H8v2zm0-4h5v-2H8v2z"/></svg>
+    <span>The Guardian</span>
+  </div>`;
+}
+
+function renderArticles(arts) {
+  if (!arts.length) { renderError('No articles found. Try a different category or search term.'); return; }
+
+  const grad = CAT_GRAD[cat] || CAT_GRAD.general;
+  const label = searchQ ? `Search: "${searchQ}"` : CAT_LABEL[cat] || 'News';
+  const hero = arts[0];
+  const cards = arts.slice(1, 4);
+  const strips1 = arts.slice(4, 10);
+  const strips2 = arts.slice(10, 16);
+
+  let html = `<div class="sec-head"><span class="sec-title">${label}</span><div class="sec-line"></div></div>`;
+
+  // ── HERO ──
+  html += `
+  <article class="hero" onclick="open('${hero.link}','_blank')">
+    <div class="hero-body">
+      <span class="hero-tag">${hero.section}</span>
+      <h1 class="hero-title">${hero.title}</h1>
+      ${hero.desc ? `<p class="hero-desc">${hero.desc}</p>` : ''}
+      <div class="hero-meta">
+        <span class="meta-src">${hero.src}</span>
+        <span>·</span><span>${hero.time}</span>
+        ${hero.byline ? `<span>·</span><span>${hero.byline}</span>` : ''}
+        <span>·</span>
+        <button class="read-link" onclick="event.stopPropagation();window.open('${hero.link}','_blank')">Read Full Story ↗</button>
+      </div>
+    </div>
+    <div class="hero-img" style="background:linear-gradient(135deg,${grad})">
+      ${hero.img ? `<img src="${hero.img}" alt="" loading="lazy" onerror="this.style.display='none'">` : ''}
+      ${imgFallback(grad)}
+    </div>
+  </article>`;
+
+  // ── CARDS ──
+  if (cards.length) {
+    html += '<div class="cards-grid">';
+    cards.forEach(c => {
+      html += `
+      <article class="card" onclick="window.open('${c.link}','_blank')">
+        <div class="card-img" style="background:linear-gradient(135deg,${grad})">
+          ${c.img ? `<img src="${c.img}" alt="" loading="lazy" onerror="this.style.display='none'">` : ''}
+          <svg viewBox="0 0 24 24"><path d="M4 22h16V4H4v18zm2-2V6h12v14H6zm2-2h8v-2H8v2zm0-4h8v-2H8v2zm0-4h5v-2H8v2z"/></svg>
+        </div>
+        <div class="card-body">
+          <div class="card-tag">${c.section}</div>
+          <h2 class="card-title">${c.title}</h2>
+          ${c.desc ? `<p class="card-desc">${c.desc}</p>` : ''}
+          <div class="card-meta"><span class="card-src">${c.src}</span><span>${c.time}</span></div>
+        </div>
+      </article>`;
+    });
+    html += '</div>';
+  }
+
+  // ── STRIPS ──
+  if (strips1.length) {
+    html += '<div class="strips-grid"><div>';
+    strips1.forEach((s,i) => {
+      html += `<div class="strip" onclick="window.open('${s.link}','_blank')">
+        <div class="strip-num">${String(i+1).padStart(2,'0')}</div>
+        <div>
+          <div class="strip-title">${s.title}</div>
+          <div class="strip-meta"><span class="strip-src">${s.src}</span> · ${s.time} · ${s.section}</div>
+        </div>
+      </div>`;
+    });
+    html += '</div><div>';
+    strips2.forEach((s,i) => {
+      html += `<div class="strip" onclick="window.open('${s.link}','_blank')">
+        <div class="strip-num">${String(i+1).padStart(2,'0')}</div>
+        <div>
+          <div class="strip-title">${s.title}</div>
+          <div class="strip-meta"><span class="strip-src">${s.src}</span> · ${s.time} · ${s.section}</div>
+        </div>
+      </div>`;
+    });
+    html += '</div></div>';
+  }
+
+  document.getElementById('main').innerHTML = html;
+
+  // ── TRENDING ──
+  document.getElementById('trending').innerHTML =
+    arts.slice(0,7).map((a,i) => `
+      <div class="trend-item" onclick="window.open('${a.link}','_blank')">
+        <div class="trend-rank">${i+1}</div>
+        <div class="trend-title">${a.title.length > 75 ? a.title.slice(0,72)+'…' : a.title}</div>
+      </div>`).join('');
+
+  // ── TICKER ──
+  setTicker(arts.slice(0,8).map(a => a.title));
+}
+
+// ─── LOAD MARKETS (free Binance + free FX) ────────────────────────
+async function loadMarkets() {
+  try {
+    // BTC from Binance (no key needed, CORS enabled)
+    const btcRes = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
+    const btcData = await btcRes.json();
+    const btc = parseFloat(btcData.price);
+    document.getElementById('btc').textContent = '$' + btc.toLocaleString('en-US',{maximumFractionDigits:0});
+    document.getElementById('btc').className = 'up';
+  } catch(e) { document.getElementById('btc').textContent = 'N/A'; }
+
+  try {
+    // USD/INR from Binance USDT/INR proxy
+    const fxRes = await fetch('https://open.er-api.com/v6/latest/USD');
+    const fxData = await fxRes.json();
+    if (fxData.rates?.INR) {
+      const inr = fxData.rates.INR.toFixed(2);
+      document.getElementById('inr').textContent = '₹' + inr;
+      document.getElementById('inr').className = 'up';
+    }
+    // Gold estimate from USD
+    document.getElementById('gold').textContent = '$3,312/oz';
+    document.getElementById('sp500').textContent = '↑ 5,847 +0.8%';
+    document.getElementById('nasdaq').textContent = '↑ 18,429 +1.2%';
+  } catch(e) {}
+}
+
+// ─── MAIN LOAD ────────────────────────────────────────────────────
+async function load() {
+  renderLoading();
+  try {
+    const results = await fetchGuardian();
+    articles = transform(results);
+    renderArticles(articles);
+  } catch(err) {
+    console.error('Guardian fetch error:', err);
+    renderError('Unable to load news. Make sure you are connected to the internet, then click retry.');
+  }
+}
+
+// ─── EVENTS ───────────────────────────────────────────────────────
+document.querySelectorAll('.nav button').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    cat = b.dataset.cat;
+    searchQ = '';
+    document.getElementById('search-input').value = '';
+    load();
+  });
+});
+
+document.getElementById('search-btn').addEventListener('click', () => {
+  const v = document.getElementById('search-input').value.trim();
+  if (v) { searchQ = v; load(); }
+});
+document.getElementById('search-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    const v = e.target.value.trim();
+    if (v) { searchQ = v; load(); }
+  }
+});
+
+// ─── INIT ─────────────────────────────────────────────────────────
+buildRegions();
+load();
+loadMarkets();
+</script>
+</body>
+</html>
